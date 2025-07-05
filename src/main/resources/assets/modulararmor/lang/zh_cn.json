@@ -1,0 +1,26 @@
+{
+  "container.modulararmor.vest_crafting": "防具制作",
+
+  "itemGroup.modularArmor": "模块化护甲系统",
+
+  "block.modulararmor.vest_crafttable": "防具工作台",
+
+  "item.modulararmor.kevlar": "凯夫拉布料",
+  "item.modulararmor.nylon": "尼龙布料",
+
+  "item.modulararmor.kevlar_helmet": "凯夫拉头盔",
+  "item.modulararmor.kevlar_chestplate": "凯夫拉胸甲",
+  "item.modulararmor.kevlar_liner": "凯夫内衬",
+
+  "item.modulararmor.bullet_plate": "防弹插板",
+
+  "item.modulararmor.tac_helmet": "战术头盔",
+  "item.modulararmor.tac_vest": "战术背心",
+
+  "item.modulararmor.highcut_helmet": "轻型战术头盔",
+  "item.modulararmor.place_carrier": "轻型战术背心",
+
+  "item.modulararmor.small_bag": "小型副包",
+  "item.modulararmor.large_bag": "大型副包",
+  "item.modulararmor.back_bag": "背板"
+}

@@ -1,0 +1,26 @@
+{
+  "container.modulararmor.vest_crafting": "Vest Crafting",
+
+  "itemGroup.modularArmor": "Modular Armor System",
+
+  "block.modulararmor.vest_crafttable": "Vest Crafting Table",
+
+  "item.modulararmor.kevlar": "Kevlar",
+  "item.modulararmor.nylon": "Nylon",
+
+  "item.modulararmor.kevlar_helmet": "Kevlar Helmet",
+  "item.modulararmor.kevlar_chestplate": "Kevlar Chestplate",
+  "item.modulararmor.kevlar_liner": "Kevlar Liner",
+
+  "item.modulararmor.bullet_plate": "Bullet Plate",
+
+  "item.modulararmor.tac_helmet": "Tactical Helmet",
+  "item.modulararmor.tac_vest": "Tactical Vest",
+
+  "item.modulararmor.highcut_helmet": "High-Cut Helmet",
+  "item.modulararmor.place_carrier": "Plate Carrier",
+
+  "item.modulararmor.small_bag": "Small Bag",
+  "item.modulararmor.large_bag": "Large Bag",
+  "item.modulararmor.back_bag": "Back Bag"
+}
