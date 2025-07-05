@@ -1,12 +1,27 @@
 package com.imoonday.modulararmor.item;
 
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ItemLike;
 
 import java.util.List;
+import java.util.function.Predicate;
 
 public interface Modular {
 
     List<ItemStack> getInstalledParts(ItemStack stack);
+
+    default ItemStack findPart(ItemStack stack, Predicate<ItemStack> predicate) {
+        for (ItemStack part : getInstalledParts(stack)) {
+            if (predicate.test(part)) {
+                return part;
+            }
+        }
+        return ItemStack.EMPTY;
+    }
+
+    default ItemStack findPart(ItemStack stack, ItemLike item) {
+        return findPart(stack, itemStack -> itemStack.is(item.asItem()));
+    }
 
     default boolean canInstall(ItemStack stack, ItemStack part) {
         return part.getItem() instanceof Installable installable && installable.canInstallOn(stack);
@@ -20,7 +35,11 @@ public interface Modular {
         return canInstall(stack, part) && installPart(stack, part);
     }
 
-    boolean installPart(ItemStack stack, ItemStack part);
+    default boolean installPart(ItemStack stack, ItemStack part) {
+        return installPart(stack, part, -1);
+    }
 
-    boolean uninstallPart(ItemStack stack, int slot);
+    boolean installPart(ItemStack stack, ItemStack part, int slot);
+
+    ItemStack uninstallPart(ItemStack stack, int slot);
 }
