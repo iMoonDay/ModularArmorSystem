@@ -1,15 +1,18 @@
 package com.imoonday.modulararmor.item;
 
-import net.minecraft.world.entity.EquipmentSlot;
+import com.imoonday.modulararmor.client.RenderArmorItemExtension;
+import com.imoonday.modulararmor.client.model.TacHelmetModel;
 
 public class TacHelmetItem extends ArmorItemBase {
 
     public TacHelmetItem(Properties pProperties) {
-        super(pProperties);
+        super("tac_helmet", Type.HELMET, 2, pProperties);
     }
 
     @Override
-    public EquipmentSlot getEquipmentSlot() {
-        return EquipmentSlot.HEAD;
+    protected RenderArmorItemExtension<?> getItemExtension() {
+        return new RenderArmorItemExtension<>(TacHelmetModel.LAYER_LOCATION, TacHelmetModel::new)
+                .setHead(model -> model.tk2)
+                .setOffsetY(0.15, 0.0);
     }
 }

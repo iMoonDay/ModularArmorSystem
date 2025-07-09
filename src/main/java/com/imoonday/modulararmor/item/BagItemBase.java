@@ -1,7 +1,13 @@
 package com.imoonday.modulararmor.item;
 
+import com.imoonday.modulararmor.client.RenderArmorItemExtension;
 import net.minecraft.world.item.DyeableLeatherItem;
 import net.minecraft.world.item.Item;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.extensions.common.IClientItemExtensions;
+
+import java.util.function.Consumer;
 
 public abstract class BagItemBase extends Item implements Installable, DyeableLeatherItem {
 
@@ -15,4 +21,12 @@ public abstract class BagItemBase extends Item implements Installable, DyeableLe
     public int getContainerSize() {
         return containerSize;
     }
+
+    public void initializeClient(Consumer<IClientItemExtensions> consumer) {
+        consumer.accept(this.getItemExtension());
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    protected abstract RenderArmorItemExtension<?> getItemExtension();
+
 }

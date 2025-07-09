@@ -137,14 +137,12 @@ repositories {
 
     // If you have mod jar dependencies in ./libs, you can declare them as a repository like so.
     // See https://docs.gradle.org/current/userguide/declaring_repositories.html#sub:flat_dir_resolver
-    // flatDir {
-    //     dir 'libs'
-    // }
+     flatDir {
+         dir 'libs'
+     }
 
     maven {
-        // Add curse maven to repositories
-        name = "Curse Maven"
-        url = "https://www.cursemaven.com"
+        url "https://cursemaven.com"
         content {
             includeGroup "curse.maven"
         }
@@ -177,7 +175,9 @@ dependencies {
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 
     implementation fg.deobf("curse.maven:timeless-and-classics-zero-1028108:6654541-sources-6654543")
-    implementation fg.deobf("curse.maven:warium-1123901:6714844")
+//    implementation fg.deobf("blank:warium-1.20.1:1.0.4")
+//    implementation fg.deobf(files('libs/warium-1.20.1-1.0.4.jar'))
+    implementation fg.deobf("curse.maven:geckolib-388172:6658942")
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.
@@ -189,7 +189,7 @@ tasks.named('processResources', ProcessResources).configure {
                              forge_version       : forge_version, forge_version_range: forge_version_range,
                              loader_version_range: loader_version_range,
                              mod_id              : mod_id, mod_name: mod_name, mod_license: mod_license, mod_version: mod_version,
-                             mod_authors         : mod_authors, mod_description: mod_description,]
+                             mod_authors         : mod_authors]
 
     inputs.properties replaceProperties
 

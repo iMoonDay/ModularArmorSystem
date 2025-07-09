@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "down": "modulararmor:block/vest_crafttable_bottom",
+    "east": "modulararmor:block/vest_crafttable_side",
+    "north": "modulararmor:block/vest_crafttable_front",
+    "particle": "modulararmor:block/vest_crafttable_front",
+    "south": "modulararmor:block/vest_crafttable_side",
+    "up": "modulararmor:block/vest_crafttable_top",
+    "west": "modulararmor:block/vest_crafttable_front"
+  }
+}

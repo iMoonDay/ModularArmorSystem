@@ -1,11 +1,18 @@
 package com.imoonday.modulararmor.item;
 
+import com.imoonday.modulararmor.client.RenderArmorItemExtension;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.DyeableLeatherItem;
-import net.minecraft.world.item.Equipable;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
@@ -18,11 +25,15 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
-public abstract class ArmorItemBase extends Item implements Equipable, Modular, DyeableLeatherItem {
+public abstract class ArmorItemBase extends ArmorItem implements Modular, DyeableLeatherItem {
 
-    public ArmorItemBase(Properties properties) {
-        super(properties);
+    protected final int partSlots;
+
+    public ArmorItemBase(String name, Type type, int partSlots, Properties properties) {
+        super(new EmptyArmorMaterial(name), type, properties);
+        this.partSlots = partSlots;
     }
 
     @Override
@@ -85,6 +96,16 @@ public abstract class ArmorItemBase extends Item implements Equipable, Modular, 
         return itemHandler.extractItem(slot, itemHandler.getSlotLimit(slot), false);
     }
 
+    public boolean hasPartSlots() {
+        return partSlots > 0;
+    }
+
+    @Override
+    public int getColor(ItemStack pStack) {
+        CompoundTag compoundtag = pStack.getTagElement("display");
+        return compoundtag != null && compoundtag.contains("color", 99) ? compoundtag.getInt("color") : -1;
+    }
+
     @Override
     public @Nullable ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
         return new ICapabilityProvider() {
@@ -93,7 +114,7 @@ public abstract class ArmorItemBase extends Item implements Equipable, Modular, 
 
             @Override
             public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
-                if (cap == ForgeCapabilities.ITEM_HANDLER) {
+                if (cap == ForgeCapabilities.ITEM_HANDLER && hasPartSlots()) {
                     return LazyOptional.of(this::getItems).cast();
                 }
                 return LazyOptional.empty();
@@ -101,10 +122,67 @@ public abstract class ArmorItemBase extends Item implements Equipable, Modular, 
 
             private ItemStackHandler getItems() {
                 if (items == null) {
-                    items = new ItemStackHandler(0);
+                    items = new ItemStackHandler(partSlots);
                 }
                 return items;
             }
         };
+    }
+
+    @Override
+    public void initializeClient(Consumer<IClientItemExtensions> consumer) {
+        consumer.accept(this.getItemExtension());
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    protected abstract RenderArmorItemExtension<?> getItemExtension();
+
+    public static class EmptyArmorMaterial implements ArmorMaterial {
+
+        private final String name;
+
+        public EmptyArmorMaterial(String name) {
+            this.name = name;
+        }
+
+        @Override
+        public int getDurabilityForType(Type pType) {
+            return 0;
+        }
+
+        @Override
+        public int getDefenseForType(Type pType) {
+            return 0;
+        }
+
+        @Override
+        public int getEnchantmentValue() {
+            return 0;
+        }
+
+        @Override
+        public SoundEvent getEquipSound() {
+            return SoundEvents.ARMOR_EQUIP_GENERIC;
+        }
+
+        @Override
+        public Ingredient getRepairIngredient() {
+            return Ingredient.EMPTY;
+        }
+
+        @Override
+        public String getName() {
+            return name;
+        }
+
+        @Override
+        public float getToughness() {
+            return 0;
+        }
+
+        @Override
+        public float getKnockbackResistance() {
+            return 0;
+        }
     }
 }

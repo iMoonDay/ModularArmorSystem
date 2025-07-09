@@ -1,15 +1,17 @@
 package com.imoonday.modulararmor.item;
 
-import net.minecraft.world.entity.EquipmentSlot;
+import com.imoonday.modulararmor.client.RenderArmorItemExtension;
+import com.imoonday.modulararmor.client.model.TacVestModel;
 
 public class TacVestItem extends ArmorItemBase {
 
     public TacVestItem(Properties pProperties) {
-        super(pProperties);
+        super("tac_vest", Type.CHESTPLATE, 4, pProperties);
     }
 
     @Override
-    public EquipmentSlot getEquipmentSlot() {
-        return EquipmentSlot.CHEST;
+    protected RenderArmorItemExtension<?> getItemExtension() {
+        return new RenderArmorItemExtension<>(TacVestModel.LAYER_LOCATION, TacVestModel::new)
+                .setBody(model -> model.kj2);
     }
 }

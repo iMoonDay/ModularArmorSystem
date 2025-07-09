@@ -1,15 +1,17 @@
 package com.imoonday.modulararmor.item;
 
-import net.minecraft.world.entity.EquipmentSlot;
+import com.imoonday.modulararmor.client.RenderArmorItemExtension;
+import com.imoonday.modulararmor.client.model.PlaceCarrierModel;
 
 public class PlaceCarrierItem extends ArmorItemBase {
 
     public PlaceCarrierItem(Properties pProperties) {
-        super(pProperties);
+        super("place_carrier", Type.CHESTPLATE, 3, pProperties);
     }
 
     @Override
-    public EquipmentSlot getEquipmentSlot() {
-        return EquipmentSlot.CHEST;
+    protected RenderArmorItemExtension<?> getItemExtension() {
+        return new RenderArmorItemExtension<>(PlaceCarrierModel.LAYER_LOCATION, PlaceCarrierModel::new)
+                .setBody(model -> model.kj3);
     }
 }

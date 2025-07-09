@@ -9,7 +9,6 @@ import com.tacz.guns.api.event.common.EntityHurtByGunEvent;
 import com.tacz.guns.api.event.common.GunDamageSourcePart;
 import com.tacz.guns.init.ModDamageTypes;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
@@ -24,16 +23,19 @@ import net.minecraftforge.fml.common.Mod;
 @Mod.EventBusSubscriber(modid = ModularArmorSystem.MODID)
 public class ForgeEvents {
 
+    public static final float BULLET_PLATE_PROTECTION = 12.0F;
+    public static final float KEVLAR_PROTECTION = 6.0F;
+
     @SubscribeEvent
     public static void onEntityHurt(LivingHurtEvent event) {
         DamageSource source = event.getSource();
-        if (!source.is(DamageTypes.ARROW) && !source.is(DamageTypeTags.BYPASSES_ARMOR)) {
+        if (!source.is(DamageTypes.ARROW) && !source.getMsgId().equals("armor_bypass_damage")) {
             return;
         }
 
         LivingEntity entity = event.getEntity();
 
-        float amount = handleBulletPlate(entity, event.getAmount());
+        float amount = handleBulletPlateProtection(entity, event.getAmount());
         if (amount <= 0.0F) {
             event.setCanceled(true);
             return;
@@ -62,7 +64,7 @@ public class ForgeEvents {
             return;
         }
 
-        float amount = handleBulletPlate(entity, event.getBaseAmount());
+        float amount = handleBulletPlateProtection(entity, event.getBaseAmount());
         if (amount <= 0.0F) {
             event.setCanceled(true);
             return;
@@ -96,13 +98,13 @@ public class ForgeEvents {
             return amount;
         }
 
-        amount -= 6.0F;
+        amount -= KEVLAR_PROTECTION;
         kevlarArmor.hurtAndBreak(1, entity, (entity1) -> entity1.broadcastBreakEvent(slot));
 
         return amount;
     }
 
-    private static float handleBulletPlate(LivingEntity entity, float amount) {
+    private static float handleBulletPlateProtection(LivingEntity entity, float amount) {
         ItemStack bulletPlate = ItemStack.EMPTY;
 
         for (ItemStack stack : entity.getArmorSlots()) {
@@ -118,11 +120,11 @@ public class ForgeEvents {
             return amount;
         }
 
-        if (amount < 12.0F) {
+        if (amount < BULLET_PLATE_PROTECTION) {
             entity.level().playSound(null, entity, SoundEvents.SHIELD_BLOCK, entity.getSoundSource(), 1.0F, 1.0F);
         }
 
-        amount -= 12.0F;
+        amount -= BULLET_PLATE_PROTECTION;
         return amount;
     }
 }

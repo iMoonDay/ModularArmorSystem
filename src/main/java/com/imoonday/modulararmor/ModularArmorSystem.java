@@ -1,13 +1,19 @@
 package com.imoonday.modulararmor;
 
+import com.imoonday.modulararmor.client.model.*;
 import com.imoonday.modulararmor.init.ModBlocks;
 import com.imoonday.modulararmor.init.ModItems;
 import com.mojang.logging.LogUtils;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.CreativeModeTabs;
+import net.minecraft.world.item.DyeableLeatherItem;
+import net.minecraft.world.item.Item;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.EntityRenderersEvent;
+import net.minecraftforge.client.event.ModelEvent;
 import net.minecraftforge.client.event.RegisterColorHandlersEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -34,7 +40,6 @@ public class ModularArmorSystem {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
         modEventBus.addListener(this::commonSetup);
-        modEventBus.addGenericListener(ItemStack.class, this::onAttachCapabilities);
 
         ModBlocks.BLOCKS.register(modEventBus);
         ModItems.ITEMS.register(modEventBus);
@@ -60,10 +65,28 @@ public class ModularArmorSystem {
         @SubscribeEvent
         public static void registerItemColors(RegisterColorHandlersEvent.Item event) {
             Item[] items = ModItems.ITEMS.getEntries().stream()
-                                         .filter(item -> item.get() instanceof DyeableArmorItem)
+                                         .filter(item -> item.get() instanceof DyeableLeatherItem)
                                          .map(RegistryObject::get)
                                          .toArray(Item[]::new);
-            event.register((stack, tintIndex) -> tintIndex > 0 ? -1 : ((DyeableArmorItem) stack.getItem()).getColor(stack), items);
+            event.register((stack, tintIndex) -> tintIndex > 0 ? -1 : ((DyeableLeatherItem) stack.getItem()).getColor(stack), items);
+        }
+
+        @SubscribeEvent
+        public static void registerRenderLayers(EntityRenderersEvent.RegisterLayerDefinitions event) {
+            event.registerLayerDefinition(KevlarHelmetModel.LAYER_LOCATION, KevlarHelmetModel::createBodyLayer);
+            event.registerLayerDefinition(KevlarChestplateModel.LAYER_LOCATION, KevlarChestplateModel::createBodyLayer);
+            event.registerLayerDefinition(TacHelmetModel.LAYER_LOCATION, TacHelmetModel::createBodyLayer);
+            event.registerLayerDefinition(TacVestModel.LAYER_LOCATION, TacVestModel::createBodyLayer);
+            event.registerLayerDefinition(HighcutHelmetModel.LAYER_LOCATION, HighcutHelmetModel::createBodyLayer);
+            event.registerLayerDefinition(PlaceCarrierModel.LAYER_LOCATION, PlaceCarrierModel::createBodyLayer);
+            event.registerLayerDefinition(SmallBagModel.LAYER_LOCATION, SmallBagModel::createBodyLayer);
+            event.registerLayerDefinition(LargeBagModel.LAYER_LOCATION, LargeBagModel::createBodyLayer);
+            event.registerLayerDefinition(BackBagModel.LAYER_LOCATION, BackBagModel::createBodyLayer);
+        }
+
+        @SubscribeEvent
+        public static void onModelBaked(ModelEvent.ModifyBakingResult event) {
+
         }
     }
 }

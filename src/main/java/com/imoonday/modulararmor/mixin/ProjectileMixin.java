@@ -15,13 +15,12 @@ public class ProjectileMixin {
 
     @Inject(method = "onHit", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/projectile/Projectile;onHitEntity(Lnet/minecraft/world/phys/EntityHitResult;)V"))
     public void beforeOnHitEntity(HitResult pResult, CallbackInfo ci) {
-        boolean headshot = EntityUtil.isHeadshot((EntityHitResult) pResult);
-        if (headshot) {
+        if (EntityUtil.isHeadshot((EntityHitResult) pResult)) {
             HeadShotHook.addHeadshotProjectile((Projectile) (Object) this);
         }
     }
 
-    @Inject(method = "onHit", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/projectile/Projectile;onHitEntity(Lnet/minecraft/world/phys/EntityHitResult;)V", shift = At.Shift.AFTER))
+    @Inject(method = "onHit", at = @At("RETURN"))
     public void afterOnHitEntity(HitResult pResult, CallbackInfo ci) {
         HeadShotHook.removeHeadshotProjectile((Projectile) (Object) this);
     }
