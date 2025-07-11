@@ -24,7 +24,7 @@ public interface Modular {
     }
 
     default boolean canInstall(ItemStack stack, ItemStack part) {
-        return part.getItem() instanceof Installable installable && installable.canInstallOn(stack);
+        return !part.isEmpty() && part.getItem() instanceof Installable installable && installable.canInstallOn(stack);
     }
 
     default boolean canUseOnVestCraftTable(ItemStack stack) {
@@ -42,4 +42,16 @@ public interface Modular {
     boolean installPart(ItemStack stack, ItemStack part, int slot);
 
     ItemStack uninstallPart(ItemStack stack, int slot);
+
+    static void removeEmptyParts(ItemStack stack) {
+        if (stack.getItem() instanceof Modular modular) {
+            List<ItemStack> parts = modular.getInstalledParts(stack);
+            for (int i = 0; i < parts.size(); i++) {
+                ItemStack part = parts.get(i);
+                if (part.isEmpty()) {
+                    modular.uninstallPart(stack, i);
+                }
+            }
+        }
+    }
 }

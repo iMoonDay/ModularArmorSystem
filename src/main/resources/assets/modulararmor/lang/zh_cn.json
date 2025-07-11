@@ -1,5 +1,5 @@
 {
-  "container.modulararmor.vest_crafting": "防具制作",
+  "container.modulararmor.vest_crafting": "配件改装",
 
   "itemGroup.modularArmor": "模块化护甲系统",
 
@@ -22,5 +22,8 @@
 
   "item.modulararmor.small_bag": "小型副包",
   "item.modulararmor.large_bag": "大型副包",
-  "item.modulararmor.back_bag": "背板"
+  "item.modulararmor.back_bag": "背板",
+
+  "key.modulararmor.vest_storage": "打开背心存储",
+  "key.categories.modulararmor": "模块化护甲系统"
 }

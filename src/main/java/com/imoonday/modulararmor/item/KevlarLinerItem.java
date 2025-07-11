@@ -11,6 +11,11 @@ public class KevlarLinerItem extends Item implements Installable {
 
     @Override
     public boolean canInstallOn(ItemStack stack) {
-        return false;
+        return stack.getItem() instanceof TacVestItem;
+    }
+
+    @Override
+    public Class<? extends Installable> getBaseType() {
+        return KevlarLinerItem.class;
     }
 }

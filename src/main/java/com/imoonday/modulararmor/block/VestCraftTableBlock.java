@@ -1,5 +1,6 @@
 package com.imoonday.modulararmor.block;
 
+import com.imoonday.modulararmor.client.screen.container.VestCraftTableMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
@@ -8,7 +9,6 @@ import net.minecraft.world.MenuProvider;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerLevelAccess;
-import net.minecraft.world.inventory.CraftingMenu;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -35,7 +35,7 @@ public class VestCraftTableBlock extends Block {
     @Override
     public MenuProvider getMenuProvider(BlockState pState, Level pLevel, BlockPos pPos) {
         return new SimpleMenuProvider((containerId, inventory, player) -> {
-            return new CraftingMenu(containerId, inventory, ContainerLevelAccess.create(pLevel, pPos));
+            return new VestCraftTableMenu(containerId, inventory, ContainerLevelAccess.create(pLevel, pPos));
         }, CONTAINER_TITLE);
     }
 }

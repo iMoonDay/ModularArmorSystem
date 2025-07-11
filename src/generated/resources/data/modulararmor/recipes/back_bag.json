@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "C": {
+      "tag": "forge:chests"
+    },
+    "L": {
+      "tag": "forge:leather"
+    },
+    "N": {
+      "item": "modulararmor:nylon"
+    }
+  },
+  "pattern": [
+    "NNN",
+    "NCN",
+    "LLL"
+  ],
+  "result": {
+    "item": "modulararmor:back_bag"
+  },
+  "show_notification": true
+}

@@ -1,9 +1,15 @@
 package com.imoonday.modulararmor;
 
+import com.imoonday.modulararmor.client.ModKeys;
 import com.imoonday.modulararmor.client.model.*;
+import com.imoonday.modulararmor.client.screen.VestCraftTableScreen;
+import com.imoonday.modulararmor.client.screen.VestStorageScreen;
 import com.imoonday.modulararmor.init.ModBlocks;
 import com.imoonday.modulararmor.init.ModItems;
+import com.imoonday.modulararmor.init.ModMenus;
+import com.imoonday.modulararmor.network.Network;
 import com.mojang.logging.LogUtils;
+import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -13,8 +19,9 @@ import net.minecraft.world.item.DyeableLeatherItem;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
-import net.minecraftforge.client.event.ModelEvent;
 import net.minecraftforge.client.event.RegisterColorHandlersEvent;
+import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -43,7 +50,10 @@ public class ModularArmorSystem {
 
         ModBlocks.BLOCKS.register(modEventBus);
         ModItems.ITEMS.register(modEventBus);
+        ModMenus.MENU_TYPES.register(modEventBus);
         CREATIVE_MODE_TABS.register(modEventBus);
+
+        Network.init();
     }
 
     public static ResourceLocation id(String path) {
@@ -54,12 +64,31 @@ public class ModularArmorSystem {
 
     }
 
+    @Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
+    public static class ClientForgeEvents {
+
+        @SubscribeEvent
+        public static void onClientTick(TickEvent.ClientTickEvent event) {
+            if (event.phase == TickEvent.Phase.END) {
+                ModKeys.handleInput();
+            }
+        }
+    }
+
     @Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
     public static class ClientModEvents {
 
         @SubscribeEvent
         public static void onClientSetup(FMLClientSetupEvent event) {
+            event.enqueueWork(() -> {
+                MenuScreens.register(ModMenus.VEST_STORAGE.get(), VestStorageScreen::new);
+                MenuScreens.register(ModMenus.VEST_CRAFTTABLE.get(), VestCraftTableScreen::new);
+            });
+        }
 
+        @SubscribeEvent
+        public static void registerKeys(RegisterKeyMappingsEvent event) {
+            ModKeys.register(event);
         }
 
         @SubscribeEvent
@@ -82,11 +111,6 @@ public class ModularArmorSystem {
             event.registerLayerDefinition(SmallBagModel.LAYER_LOCATION, SmallBagModel::createBodyLayer);
             event.registerLayerDefinition(LargeBagModel.LAYER_LOCATION, LargeBagModel::createBodyLayer);
             event.registerLayerDefinition(BackBagModel.LAYER_LOCATION, BackBagModel::createBodyLayer);
-        }
-
-        @SubscribeEvent
-        public static void onModelBaked(ModelEvent.ModifyBakingResult event) {
-
         }
     }
 }

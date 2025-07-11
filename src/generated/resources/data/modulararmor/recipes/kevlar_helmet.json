@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "K": {
+      "item": "modulararmor:kevlar"
+    }
+  },
+  "pattern": [
+    "KKK",
+    "K K"
+  ],
+  "result": {
+    "item": "modulararmor:kevlar_helmet"
+  },
+  "show_notification": true
+}

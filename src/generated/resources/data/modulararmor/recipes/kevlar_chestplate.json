@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "K": {
+      "item": "modulararmor:kevlar"
+    },
+    "L": {
+      "item": "minecraft:leather_chestplate"
+    }
+  },
+  "pattern": [
+    "KLK",
+    "KKK",
+    "KKK"
+  ],
+  "result": {
+    "item": "modulararmor:kevlar_chestplate"
+  },
+  "show_notification": true
+}

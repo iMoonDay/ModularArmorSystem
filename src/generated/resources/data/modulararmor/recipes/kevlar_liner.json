@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "K": {
+      "item": "modulararmor:kevlar"
+    }
+  },
+  "pattern": [
+    "K K",
+    "KKK",
+    "KKK"
+  ],
+  "result": {
+    "item": "modulararmor:kevlar_liner"
+  },
+  "show_notification": true
+}

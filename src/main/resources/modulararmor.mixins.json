@@ -5,9 +5,11 @@
   "compatibilityLevel": "JAVA_8",
   "refmap": "modulararmor.refmap.json",
   "mixins": [
+    "LivingEntityRendererMixin",
     "ProjectileMixin"
   ],
   "client": [
+    "LocalPlayerMixin"
   ],
   "injectors": {
     "defaultRequire": 1

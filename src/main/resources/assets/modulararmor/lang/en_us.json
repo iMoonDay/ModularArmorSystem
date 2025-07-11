@@ -1,5 +1,5 @@
 {
-  "container.modulararmor.vest_crafting": "Vest Crafting",
+  "container.modulararmor.vest_crafting": "Part Modification",
 
   "itemGroup.modularArmor": "Modular Armor System",
 
@@ -22,5 +22,8 @@
 
   "item.modulararmor.small_bag": "Small Bag",
   "item.modulararmor.large_bag": "Large Bag",
-  "item.modulararmor.back_bag": "Back Bag"
+  "item.modulararmor.back_bag": "Back Bag",
+
+  "key.modulararmor.vest_storage": "Open Vest Storage",
+  "key.categories.modulararmor": "Modular Armor System"
 }

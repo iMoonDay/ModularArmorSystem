@@ -2,17 +2,11 @@ package com.imoonday.modulararmor.item;
 
 import com.imoonday.modulararmor.client.RenderArmorItemExtension;
 import com.imoonday.modulararmor.client.model.SmallBagModel;
-import net.minecraft.world.item.ItemStack;
 
 public class SmallBagItem extends BagItemBase {
 
     public SmallBagItem(Properties pProperties) {
         super(pProperties, 3);
-    }
-
-    @Override
-    public boolean canInstallOn(ItemStack stack) {
-        return false;
     }
 
     @Override

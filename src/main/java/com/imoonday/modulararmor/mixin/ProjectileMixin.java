@@ -15,8 +15,9 @@ public class ProjectileMixin {
 
     @Inject(method = "onHit", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/projectile/Projectile;onHitEntity(Lnet/minecraft/world/phys/EntityHitResult;)V"))
     public void beforeOnHitEntity(HitResult pResult, CallbackInfo ci) {
-        if (EntityUtil.isHeadshot((EntityHitResult) pResult)) {
-            HeadShotHook.addHeadshotProjectile((Projectile) (Object) this);
+        Projectile projectile = (Projectile) (Object) this;
+        if (EntityUtil.isHeadshot((EntityHitResult) pResult, projectile)) {
+            HeadShotHook.addHeadshotProjectile(projectile);
         }
     }
 

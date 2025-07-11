@@ -85,13 +85,21 @@ public class ForgeEvents {
         ItemStack slotItem = entity.getItemBySlot(slot);
         ItemStack kevlarArmor = ItemStack.EMPTY;
 
+        EquipmentSlot actuallySlot;
+
         if (!slotItem.isEmpty()) {
             Item item = slotItem.getItem();
             if (item instanceof KevlarHelmetItem || item instanceof KevlarChestplateItem) {
                 kevlarArmor = slotItem;
-            } else if (item instanceof Modular modular) {
-                kevlarArmor = modular.findPart(slotItem, ModItems.KEVLAR_LINER.get());
+                actuallySlot = slot;
+            } else {
+                if (item instanceof Modular modular) {
+                    kevlarArmor = modular.findPart(slotItem, ModItems.KEVLAR_LINER.get());
+                }
+                actuallySlot = null;
             }
+        } else {
+            actuallySlot = null;
         }
 
         if (kevlarArmor.isEmpty()) {
@@ -99,18 +107,27 @@ public class ForgeEvents {
         }
 
         amount -= KEVLAR_PROTECTION;
-        kevlarArmor.hurtAndBreak(1, entity, (entity1) -> entity1.broadcastBreakEvent(slot));
+        kevlarArmor.hurtAndBreak(1, entity, (entity1) -> {
+            if (actuallySlot != null) {
+                entity1.broadcastBreakEvent(actuallySlot);
+            }
+        });
+        if (actuallySlot == null && kevlarArmor.isEmpty()) {
+            Modular.removeEmptyParts(slotItem);
+        }
 
         return amount;
     }
 
     private static float handleBulletPlateProtection(LivingEntity entity, float amount) {
         ItemStack bulletPlate = ItemStack.EMPTY;
+        ItemStack armor = ItemStack.EMPTY;
 
         for (ItemStack stack : entity.getArmorSlots()) {
             if (stack.getItem() instanceof Modular modular) {
                 bulletPlate = modular.findPart(stack, ModItems.BULLET_PLATE.get());
                 if (!bulletPlate.isEmpty()) {
+                    armor = stack;
                     break;
                 }
             }
@@ -125,6 +142,11 @@ public class ForgeEvents {
         }
 
         amount -= BULLET_PLATE_PROTECTION;
+        bulletPlate.hurtAndBreak(1, entity, (entity1) -> {});
+        if (bulletPlate.isEmpty()) {
+            Modular.removeEmptyParts(armor);
+        }
+
         return amount;
     }
 }

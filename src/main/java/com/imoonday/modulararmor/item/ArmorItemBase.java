@@ -16,6 +16,7 @@ import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
@@ -51,10 +52,21 @@ public abstract class ArmorItemBase extends ArmorItem implements Modular, Dyeabl
         return parts;
     }
 
+    public static ItemStackHandler getItems(ItemStack stack) {
+        return stack.getCapability(ForgeCapabilities.ITEM_HANDLER)
+                    .filter(ItemStackHandler.class::isInstance)
+                    .map(ItemStackHandler.class::cast)
+                    .orElse(new ItemStackHandler(0));
+    }
+
     @Override
     public boolean installPart(ItemStack stack, ItemStack part, int slot) {
         return stack.getCapability(ForgeCapabilities.ITEM_HANDLER)
-                    .lazyMap(itemHandler -> installPart(itemHandler, part, slot))
+                    .lazyMap(itemHandler -> {
+                        boolean installed = installPart(itemHandler, part, slot);
+                        saveItemsData(itemHandler, stack);
+                        return installed;
+                    })
                     .orElse(false);
     }
 
@@ -84,7 +96,11 @@ public abstract class ArmorItemBase extends ArmorItem implements Modular, Dyeabl
     @Override
     public ItemStack uninstallPart(ItemStack stack, int slot) {
         return stack.getCapability(ForgeCapabilities.ITEM_HANDLER)
-                    .lazyMap(itemHandler -> uninstallPart(itemHandler, slot))
+                    .lazyMap(itemHandler -> {
+                        ItemStack uninstalled = uninstallPart(itemHandler, slot);
+                        saveItemsData(itemHandler, stack);
+                        return uninstalled;
+                    })
                     .orElse(ItemStack.EMPTY);
     }
 
@@ -94,6 +110,12 @@ public abstract class ArmorItemBase extends ArmorItem implements Modular, Dyeabl
         }
 
         return itemHandler.extractItem(slot, itemHandler.getSlotLimit(slot), false);
+    }
+
+    public static void saveItemsData(IItemHandler itemHandler, ItemStack stack) {
+        if (itemHandler instanceof INBTSerializable<?> serializable) {
+            stack.getOrCreateTag().put("Items", serializable.serializeNBT());
+        }
     }
 
     public boolean hasPartSlots() {
@@ -122,7 +144,38 @@ public abstract class ArmorItemBase extends ArmorItem implements Modular, Dyeabl
 
             private ItemStackHandler getItems() {
                 if (items == null) {
-                    items = new ItemStackHandler(partSlots);
+                    items = new ItemStackHandler(partSlots) {
+                        @Override
+                        public boolean isItemValid(int slot, @NotNull ItemStack itemStack) {
+                            if (!canInstall(stack, itemStack)) {
+                                return false;
+                            }
+
+                            Class<? extends Installable> baseType = itemStack.getItem() instanceof Installable installable ? installable.getBaseType() : null;
+
+                            int slots = getSlots();
+                            for (int i = 0; i < slots; i++) {
+                                if (i == slot) {
+                                    continue;
+                                }
+                                ItemStack stackInSlot = getStackInSlot(i);
+                                if (ItemStack.isSameItem(itemStack, stackInSlot) || Installable.isSameBaseType(stackInSlot, baseType)) {
+                                    return false;
+                                }
+                            }
+
+                            return super.isItemValid(slot, itemStack);
+                        }
+
+                        @Override
+                        protected void onContentsChanged(int slot) {
+                            super.onContentsChanged(slot);
+                            saveItemsData(this, stack);
+                        }
+                    };
+                    if (stack.hasTag() && stack.getOrCreateTag().contains("Items")) {
+                        items.deserializeNBT(stack.getOrCreateTag().getCompound("Items"));
+                    }
                 }
                 return items;
             }

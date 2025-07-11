@@ -23,11 +23,12 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 
 import static net.minecraft.world.item.ItemDisplayContext.GUI;
 
-public class RenderArmorItemExtension<T extends EntityModel<? extends Entity>> implements IClientItemExtensions {
+public class RenderArmorItemExtension<T extends EntityModel<? extends LivingEntity>> implements IClientItemExtensions {
 
     private final ModelLayerLocation layerLocation;
     private final ResourceLocation textureLocation;
@@ -60,8 +61,16 @@ public class RenderArmorItemExtension<T extends EntityModel<? extends Entity>> i
         return model.apply(getRoot());
     }
 
+    public ResourceLocation getTextureLocation() {
+        return textureLocation;
+    }
+
     public ModelPart getRoot() {
         return Minecraft.getInstance().getEntityModels().bakeLayer(layerLocation);
+    }
+
+    public Optional<ModelPart> getHead() {
+        return getModelPart(head);
     }
 
     public RenderArmorItemExtension<T> setHead(Function<T, ModelPart> head) {
@@ -69,9 +78,17 @@ public class RenderArmorItemExtension<T extends EntityModel<? extends Entity>> i
         return this;
     }
 
+    public Optional<ModelPart> getHat() {
+        return getModelPart(hat);
+    }
+
     public RenderArmorItemExtension<T> setHat(Function<T, ModelPart> hat) {
         this.hat = hat;
         return this;
+    }
+
+    public Optional<ModelPart> getBody() {
+        return getModelPart(body);
     }
 
     public RenderArmorItemExtension<T> setBody(Function<T, ModelPart> body) {
@@ -79,9 +96,17 @@ public class RenderArmorItemExtension<T extends EntityModel<? extends Entity>> i
         return this;
     }
 
+    public Optional<ModelPart> getRightArm() {
+        return getModelPart(rightArm);
+    }
+
     public RenderArmorItemExtension<T> setRightArm(Function<T, ModelPart> rightArm) {
         this.rightArm = rightArm;
         return this;
+    }
+
+    public Optional<ModelPart> getLeftArm() {
+        return getModelPart(leftArm);
     }
 
     public RenderArmorItemExtension<T> setLeftArm(Function<T, ModelPart> leftArm) {
@@ -89,9 +114,17 @@ public class RenderArmorItemExtension<T extends EntityModel<? extends Entity>> i
         return this;
     }
 
+    public Optional<ModelPart> getRightLeg() {
+        return getModelPart(rightLeg);
+    }
+
     public RenderArmorItemExtension<T> setRightLeg(Function<T, ModelPart> rightLeg) {
         this.rightLeg = rightLeg;
         return this;
+    }
+
+    public Optional<ModelPart> getLeftLeg() {
+        return getModelPart(leftLeg);
     }
 
     public RenderArmorItemExtension<T> setLeftLeg(Function<T, ModelPart> leftLeg) {
@@ -139,7 +172,17 @@ public class RenderArmorItemExtension<T extends EntityModel<? extends Entity>> i
         return armorModel;
     }
 
-    public static <T extends EntityModel<? extends Entity>> ModelPart getOrEmpty(T model, Function<T, ModelPart> modelPartGetter) {
+    protected Optional<ModelPart> getModelPart(Function<T, ModelPart> modelPartGetter) {
+        if (modelPartGetter != null) {
+            ModelPart modelPart = modelPartGetter.apply(this.getModel());
+            if (modelPart != null) {
+                return Optional.of(modelPart);
+            }
+        }
+        return Optional.empty();
+    }
+
+    public static <T extends EntityModel<? extends LivingEntity>> ModelPart getOrEmpty(T model, Function<T, ModelPart> modelPartGetter) {
         if (modelPartGetter != null) {
             ModelPart modelPart = modelPartGetter.apply(model);
             if (modelPart != null) {

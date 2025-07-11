@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "N": {
+      "item": "modulararmor:nylon"
+    },
+    "S": {
+      "tag": "forge:string"
+    }
+  },
+  "pattern": [
+    " S ",
+    "NNN",
+    "NNN"
+  ],
+  "result": {
+    "item": "modulararmor:large_bag"
+  },
+  "show_notification": true
+}
