@@ -16,7 +16,7 @@ public class PlaceCarrierItem extends ArmorItemBase implements IVestStorage {
     @Override
     protected RenderArmorItemExtension<?> getItemExtension() {
         return new RenderArmorItemExtension<>(PlaceCarrierModel.LAYER_LOCATION, PlaceCarrierModel::new)
-                .setBody(model -> model.kj3);
+                .setBody(model -> model.kj2);
     }
 
     @Override

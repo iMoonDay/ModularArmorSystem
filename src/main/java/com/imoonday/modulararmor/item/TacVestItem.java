@@ -16,7 +16,7 @@ public class TacVestItem extends ArmorItemBase implements IVestStorage {
     @Override
     protected RenderArmorItemExtension<?> getItemExtension() {
         return new RenderArmorItemExtension<>(TacVestModel.LAYER_LOCATION, TacVestModel::new)
-                .setBody(model -> model.kj2);
+                .setBody(model -> model.kj3);
     }
 
     @Override
